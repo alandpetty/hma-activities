@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HMA Weekend Activities Sign-Up — 2026–2027</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--o:#EF6C00;--ol:#fff5ee;--bk:#111111;--wh:#ffffff;--gr:#f4f4f2;--bd:#e4e4e4;--tx:#222222;--mu:#888888}
+body{font-family:Arial,'Helvetica Neue',sans-serif;background:var(--gr);color:var(--tx);padding-bottom:100px}
+
+/* HEADER */
+.hdr{background:var(--bk);padding:20px 24px 18px}
+.hdr-eye{color:var(--o);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:5px}
+.hdr-title{color:#fff;font-size:22px;font-weight:800;line-height:1.2}
+.hdr-sub{color:#555;font-size:12px;margin-top:4px}
+.hdr-bar{height:3px;background:var(--o);margin-top:16px;border-radius:2px}
+
+/* CARD SHELL */
+.card{background:#fff;margin:12px 14px;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-hdr{background:var(--bk);padding:10px 16px;display:flex;align-items:center;gap:8px}
+.card-hdr h2{color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+.card-hdr span{background:var(--o);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px}
+.card-body{padding:16px}
+
+/* FIELDS */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row1{margin-bottom:12px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.fg label.req::after{content:" *";color:var(--o)}
+.fg input,.fg select{border:1.5px solid var(--bd);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--bk);outline:none;transition:border-color .15s;background:#fff}
+.fg input:focus,.fg select:focus{border-color:var(--o)}
+.fg input.err,.fg select.err{border-color:#e74c3c}
+
+/* AGREEMENT */
+.agree-box{background:#f9f9f9;border-left:3px solid var(--o);border-radius:8px;padding:12px 14px;font-size:12px;color:#555;line-height:1.75;margin-bottom:14px}
+
+/* SIGNATURE */
+.sig-wrap{border:1.5px solid var(--bd);border-radius:10px;position:relative;background:#fafafa;margin-bottom:12px}
+canvas{display:block;width:100%;height:110px;cursor:crosshair;touch-action:none;border-radius:10px}
+.sig-hint{font-size:10px;color:#bbb;position:absolute;bottom:8px;left:12px;pointer-events:none}
+.sig-clear{position:absolute;top:8px;right:8px;background:#fff;border:1px solid var(--bd);border-radius:5px;padding:3px 9px;font-size:11px;color:var(--mu);cursor:pointer}
+.sig-clear:hover{border-color:#aaa}
+
+/* CHECKBOX */
+.chk-row{display:flex;align-items:center;gap:9px;margin-top:4px}
+.chk-row input{width:16px;height:16px;accent-color:var(--o);flex-shrink:0;cursor:pointer}
+.chk-row label{font-size:12px;font-weight:500;cursor:pointer}
+
+/* SEM TABS */
+.sem-tabs{display:flex;border-bottom:1px solid var(--bd)}
+.sem-tab{flex:1;padding:13px 8px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--mu);border:none;border-bottom:3px solid transparent;margin-bottom:-1px;background:none;transition:all .12s}
+.sem-tab.on{color:var(--o);border-bottom-color:var(--o)}
+
+/* ACTIVITY GRID */
+.act-wrap{padding:12px 14px 4px}
+.sem-label{font-size:10px;font-weight:700;color:var(--mu);letter-spacing:1.5px;text-transform:uppercase;margin:8px 0 10px;display:flex;align-items:center;gap:8px}
+.sem-label::after{content:'';flex:1;height:1px;background:var(--bd)}
+.act-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:16px}
+
+/* ACTIVITY CARD */
+.ac{background:#fff;border-radius:12px;border:2px solid var(--bd);cursor:pointer;overflow:hidden;transition:border-color .12s,box-shadow .12s;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.ac:hover{border-color:#ccc}
+.ac.on{border-color:var(--o);box-shadow:0 0 0 3px rgba(239,108,0,.12)}
+.ac-top{position:relative;height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.ac-emoji{font-size:42px;line-height:1}
+.ac-price-wrap{text-align:right}
+.ac-price{font-size:23px;font-weight:800;color:var(--bk)}
+.ac-spots{font-size:10px;font-weight:600;color:var(--mu);margin-top:1px}
+.ac-check{position:absolute;top:8px;left:8px;background:var(--o);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.ac-tag{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.5px;white-space:nowrap}
+.ac-body{padding:11px 14px 13px}
+.ac-name{font-weight:700;font-size:13px;color:var(--bk);line-height:1.3;margin-bottom:3px}
+.ac-date{font-size:11px;color:var(--o);font-weight:600;margin-bottom:5px}
+.ac-desc{font-size:11px;color:#666;line-height:1.5}
+.ac-btn{margin-top:10px;padding:8px;border-radius:8px;text-align:center;font-size:12px;font-weight:700;background:var(--o);color:#fff;transition:background .12s}
+.ac.on .ac-btn{background:var(--bk)}
+
+/* CART BAR */
+#cart{position:fixed;bottom:0;left:0;right:0;background:var(--bk);padding:13px 20px;z-index:200;box-shadow:0 -2px 20px rgba(0,0,0,.3);transition:all .2s}
+.cart-empty{text-align:center;color:#444;font-size:13px}
+.cart-live{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cart-left{}
+.cart-count{color:var(--mu);font-size:11px;margin-bottom:2px}
+.cart-names{color:#ddd;font-size:11px;max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-right{text-align:right;flex-shrink:0}
+.cart-lbl{color:#444;font-size:9px;text-transform:uppercase;letter-spacing:1px}
+.cart-total{color:var(--o);font-size:28px;font-weight:800;line-height:1}
+
+/* SUBMIT */
+.submit-wrap{padding:16px 14px 8px}
+.submit-btn{width:100%;background:var(--o);color:#fff;border:none;border-radius:10px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;transition:background .15s;letter-spacing:.3px}
+.submit-btn:hover{background:#d45f00}
+.submit-btn:disabled{background:#ccc;cursor:not-allowed}
+.submit-note{text-align:center;font-size:11px;color:var(--mu);margin-top:8px;line-height:1.7;padding:0 8px}
+
+/* THANK YOU */
+#ty{display:none;text-align:center;padding:60px 24px;background:#fff;margin:20px 14px;border-radius:14px}
+#ty.show{display:block}
+.ty-icon{font-size:60px;margin-bottom:14px}
+.ty-title{font-size:22px;font-weight:800;color:var(--bk);margin-bottom:10px}
+.ty-sub{font-size:14px;color:#666;line-height:1.75;max-width:380px;margin:0 auto}
+.ty-total{background:var(--ol);border:1.5px solid var(--o);border-radius:10px;padding:14px 20px;margin:20px auto;max-width:320px}
+.ty-total-lbl{font-size:11px;color:var(--o);font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.ty-total-amt{font-size:32px;font-weight:800;color:var(--bk)}
+.ty-items{margin-top:14px;text-align:left;max-width:380px;margin:14px auto 0}
+.ty-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+.ty-item:last-child{border-bottom:none}
+
+/* VALIDATION */
+.err-msg{font-size:11px;color:#e74c3c;margin-top:3px}
+.val-banner{background:#fce8e8;border:1px solid #f5c6cb;color:#721c24;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;display:none}
+.val-banner.show{display:block}
+
+@media(max-width:500px){
+  .row2{grid-template-columns:1fr}
+  .act-grid{grid-template-columns:1fr}
+  .hdr-title{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-eye">Hargrave Military Academy</div>
+  <div class="hdr-title">Weekend Activities Sign-Up</div>
+  <div class="hdr-sub">Academic Year 2026–2027 · Student Activities Office</div>
+  <div class="hdr-bar"></div>
+</div>
+
+<!-- THANK YOU (hidden until submit) -->
+<div id="ty">
+  <div class="ty-icon">✅</div>
+  <div class="ty-title">You're signed up!</div>
+  <div class="ty-sub">A confirmation has been sent to your cadet and parent/guardian email. Your spot is held for <strong>5 business days</strong> pending payment to the Student Activities Office.</div>
+  <div class="ty-total">
+    <div class="ty-total-lbl">Your total due</div>
+    <div class="ty-total-amt" id="ty-amt">$0</div>
+  </div>
+  <div class="ty-items" id="ty-list"></div>
+</div>
+
+<!-- MAIN FORM -->
+<form id="mainform">
+  <!-- Data fields populated by JS before submit -->
+  <input type="hidden" id="selected-activities-field" />
+  <input type="hidden" id="total-amount-field" />
+  <input type="hidden" id="sig-data-field" />
+
+  <!-- CADET INFO -->
+  <div class="card">
+    <div class="card-hdr"><h2>Section 1 — Cadet Information</h2></div>
+    <div class="card-body">
+      <div class="row2">
+        <div class="fg"><label class="req" for="fname">First Name</label><input type="text" id="fname" name="first-name" required></div>
+        <div class="fg"><label class="req" for="lname">Last Name</label><input type="text" id="lname" name="last-name" required></div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label class="req" for="grade">Grade / Year</label>
+          <select id="grade" name="grade" required>
+            <option value="">Select grade</option>
+            <option>9th Grade</option><option>10th Grade</option><option>11th Grade</option><option>12th Grade</option><option>Post-Graduate (PG)</option>
+          </select>
+        </div>
+        <div class="fg"><label class="req" for="company">Company</label>
+          <select id="company" name="company" required>
+            <option value="">Select company</option>
+            <option>Alpha Company</option><option>Bravo Company</option><option>Charlie Company</option><option>Delta Company</option><option>Echo Company</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label class="req" for="cemail">Cadet Email</label><input type="email" id="cemail" name="cadet-email" required></div>
+        <div class="fg"><label class="req" for="pemail">Parent / Guardian Email</label><input type="email" id="pemail" name="parent-email" required></div>
+      </div>
+      <div class="row1">
+        <div class="fg"><label class="req" for="phone">Phone Number</label><input type="tel" id="phone" name="phone" required></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AGREEMENT -->
+  <div class="card">
+    <div class="card-hdr"><h2>Section 2 — Trip Rules &amp; Agreement</h2></div>
+    <div class="card-body">
+      <div class="agree-box">
+        By signing below, I confirm that I understand and agree to all trip rules and behavioral expectations set by Hargrave Military Academy. I understand that failure to meet eligibility requirements or comply with conduct standards on any trip may result in my removal from the activity without refund. I acknowledge that spots are not confirmed until payment is received by the Student Activities Office within 5 business days of sign-up.
+      </div>
+      <div class="fg" style="margin-bottom:12px"><label>Electronic Signature <span style="color:var(--o)">*</span></label></div>
+      <div class="sig-wrap">
+        <canvas id="sig" width="700" height="110"></canvas>
+        <span class="sig-hint">Sign with your mouse or finger</span>
+        <button type="button" class="sig-clear" onclick="clearSig()">Clear</button>
+      </div>
+      <div id="sig-err" class="err-msg" style="display:none;margin-bottom:8px">Signature is required.</div>
+      <div class="chk-row">
+        <input type="checkbox" id="agree" name="agreement" required>
+        <label for="agree">I agree to the trip rules and behavioral expectations above.</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEMESTER SELECTOR -->
+  <div class="card">
+    <div class="card-hdr"><h2>Section 3 — Semester Selection</h2></div>
+    <input type="hidden" name="semester" id="sem-hidden" value="fall"><div class="sem-tabs">
+      <button type="button" class="sem-tab on" onclick="setSem('fall',this)">🍂 Fall 2026</button>
+      <button type="button" class="sem-tab" onclick="setSem('spring',this)">🌸 Spring 2027</button>
+      <button type="button" class="sem-tab" onclick="setSem('both',this)">📋 Both Semesters</button>
+    </div>
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="card">
+    <div class="card-hdr"><h2>Section 4 — Activity Selection</h2><span id="count-badge">0 selected</span></div>
+    <div class="val-banner" id="act-err">Please select at least one activity to continue.</div>
+    <div id="act-container" class="act-wrap"></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button type="submit" class="submit-btn" id="submit-btn">Submit Sign-Up →</button>
+    <div class="submit-note">After submitting, a confirmation will be sent to your cadet and parent email addresses.<br>Payment is due to the Student Activities Office within 5 business days to secure your spot.</div>
+  </div>
+
+</form>
+
+<!-- CART BAR -->
+<div id="cart"><div class="cart-empty">Select activities above to see your total</div></div>
+
+<script>
+// ─── ACTIVITY DATA ────────────────────────────────────────────────────────────
+const FALL = [
+  {id:'F01',emoji:'🎯',bg:'#fff5ee',name:'Main Event',date:'Sat, Sep 6',price:45,spots:40,desc:'Brand new Greensboro venue — multi-level laser tag, gel blasters, 100+ arcade games, full restaurant. Joint event with Salem Academy & Chatham Hall.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'F02',emoji:'🎢',bg:'#fce8e8',name:'Carowinds',date:'Sat, Sep 13',price:105,spots:30,desc:'Full day at Carowinds with all-day dining. Roller coasters, Scarowinds, and unlimited food all day.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'F03a',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Sep 11',date:'Fri, Sep 11',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F03b',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Sep 25',date:'Fri, Sep 25',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F03c',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Oct 2',date:'Fri, Oct 2',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F03d',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Oct 23',date:'Fri, Oct 23',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F03e',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Oct 30',date:'Fri, Oct 30',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F03f',emoji:'🎬',bg:'#1a1a2e',name:'Movie Night — Nov 13',date:'Fri, Nov 13',price:5,spots:999,desc:'New release on the big screen in the HMA auditorium. Snacks available.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F04',emoji:'🌲',bg:'#0d1f0d',name:'Woods of Terror',date:'Sat, Sep 27',price:65,spots:35,desc:"One of NC's top-rated haunted attractions. Live actors, insane sets. Evening departure after dinner — who's brave enough?",tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+  {id:'F05',emoji:'🔐',bg:'#1d1025',name:'Escape Room',date:'Sat, Oct 4',price:50,spots:20,desc:'One hour, one mission: crack codes and escape before the timer hits zero. Small group — only 20 spots.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+  {id:'F06',emoji:'🔫',bg:'#0d1a2e',name:'On-Campus Laser Tag',date:'Sun, Oct 5',price:25,spots:60,desc:'The gym becomes a tactical arena — neon lights, fog, and competitive missions. Faculty-supervised. Alan away this weekend.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F07',emoji:'🦁',bg:'#faeeda',name:'Zoo Trip',date:'Sat, Oct 25',price:40,spots:40,desc:'NC Zoo in Asheboro — one of the biggest in the Southeast. Lions, gorillas, giraffes, and a full day to explore.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'F08',emoji:'🎉',bg:'#fff5ee',name:'Costume Pep Rally',date:'Sat, Nov 1',price:0,spots:999,desc:'Halloween afternoon costume contest on campus. Prizes for most creative, scariest, and funniest. Free — sign up for headcount.',tag:'Free',tagBg:'#e8f5e9',tagFg:'#2e7d32'},
+  {id:'F09',emoji:'👻',bg:'#130d1f',name:'Kersey Valley Spooky Woods',date:'Sat, Nov 1',price:65,spots:35,desc:'Top-rated NC haunted attraction on Halloween night. Follows the Costume Pep Rally — the full Halloween experience.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+  {id:'F10',emoji:'🐱',bg:'#e6f1fb',name:'The Cat in the Hat — Movie Outing',date:'Sat, Nov 7',price:32,spots:50,desc:'Opening weekend theater trip. Faculty-supervised. Price covers ticket and concession envelope. Alan away in Buffalo.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5'},
+  {id:'F11',emoji:'🎳',bg:'#e8f5e9',name:'Bowling — Faculty Outing',date:'Sat, Nov 14',price:26,spots:40,desc:'Bowling and arcade Saturday. Faculty-supervised. Price covers 2 games and arcade time. Alan away in Myrtle Beach.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5'},
+  {id:'F12',emoji:'🏹',bg:'#0d0d0d',name:'Hunger Games — Movie Outing (Dec 5)',date:'Sat, Dec 5',price:32,spots:40,desc:'Theater trip for non-DSAR cadets during Colonial Christmas weekend. Faculty-supervised. Ticket + concession envelope.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F13',emoji:'🏹',bg:'#0d0d0d',name:'Hunger Games — Friday Night (Dec 11)',date:'Fri, Dec 11',price:32,spots:50,desc:'Friday night movie outing during exam prep weekend. Faculty-supervised. Ticket + concession envelope.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'F14',emoji:'🦸',bg:'#0a0a1a',name:'Avengers: Doomsday',date:'Thu, Dec 18',price:35,spots:50,desc:"Morning showing before 12:30PM Christmas break dismissal. Send the semester off with the year's biggest blockbuster.",tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+];
+
+const SPRING = [
+  {id:'S01',emoji:'🎥',bg:'#111',name:'Movies & Dinner — Jan Faculty Outing',date:'Sat, Jan 9',price:30,spots:40,desc:'Movie and dinner during closed weekend. Faculty-supervised. Alan away in Paducah. Ticket + dinner envelope.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'S02',emoji:'⛸️',bg:'#e6f4fb',name:'Ice Skating + Starbucks',date:'Sat, Jan 17',price:40,spots:40,desc:'Roanoke or Greensboro. Hit the rink, show your moves, then warm up with Starbucks. Rink admission, skate rental, and Starbucks included.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'S03',emoji:'🏀',bg:'#faeeda',name:'NBA Game',date:'Jan/Feb TBD',price:120,spots:25,desc:'NBA game outing — date and opponent TBD when schedule drops. Limited to 25 spots. Ticket and travel included. Alan away in Champaign.',tag:'Premium',tagBg:'#fce8e8',tagFg:'#a32d2d'},
+  {id:'S04',emoji:'🎥',bg:'#111',name:'Movies & Dinner — Jan 30 Faculty Outing',date:'Sat, Jan 30',price:30,spots:40,desc:'Movie and dinner outing. Faculty-supervised. Alan away in Orlando. Ticket + dinner envelope.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'S05',emoji:'🎥',bg:'#111',name:'Movies & Dinner — Feb Faculty Outing',date:'Sat, Feb 6',price:30,spots:40,desc:'Movie and dinner outing during Mess Night weekend. Faculty-supervised. Alan away in DC. Ticket + dinner envelope.',tag:'Faculty-Led',tagBg:'#e6f1fb',tagFg:'#185fa5',dark:true},
+  {id:'S06',emoji:'🥩',bg:'#1a0505',name:"Valentine's Dinner — Texas de Brazil",date:'Sat, Feb 13',price:60,spots:30,desc:"Brazilian steakhouse — endless cuts carved tableside. Valentine's Day weekend. Joint event with sister schools. Don't eat lunch.",tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+  {id:'S07',emoji:'✊',bg:'#e6f1fb',name:'Civil Rights Museum + Entertainment Venue',date:'Sat, Feb 21',price:50,spots:40,desc:'History at the International Civil Rights Center, Greensboro, then bowling, laser tag, and food. Venue TBD.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'S08',emoji:'🏨',bg:'#0d0a1f',name:'Richmond Overnight',date:'Feb 27–28',price:145,spots:35,desc:'Two-day trip: VISAA Semis + Sky Zone GLOW Night 8–11PM + hotel + Escape Room + VISAA Finals. All-inclusive except dinner cash ($20). Eligibility requirements apply.',tag:'Overnight ⭐',tagBg:'#ede8fb',tagFg:'#4a3aa7',dark:true},
+  {id:'S09',emoji:'🏀',bg:'#fff5ee',name:'March Madness Watch Party',date:'Mar 20–21',price:10,spots:999,desc:'Big screens all weekend in the auditorium. Bracket busters and buzzer beaters. On-campus only. Price covers snacks and drinks.',tag:'On-Campus',tagBg:'#e6f1fb',tagFg:'#185fa5'},
+  {id:'S10',emoji:'🥚',bg:'#e8f5e9',name:'Easter Egg Hunt — Campus-Wide',date:'Mar 28–29',price:0,spots:999,desc:'Campus-wide Easter egg hunt with prizes. Free — sign up for headcount tracking only.',tag:'Free',tagBg:'#e8f5e9',tagFg:'#2e7d32'},
+  {id:'S11',emoji:'🏎️',bg:'#1a0505',name:'Rush Hour Go Karts',date:'Sat, Apr 5',price:120,spots:25,desc:'Indoor electric go-karts at serious speed. Head-to-head racing. Unlimited session. Fastest lap = bragging rights.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+  {id:'S12',emoji:'🏌️',bg:'#e8f5e9',name:'TopGolf Greensboro',date:'Sun, May 4',price:40,spots:40,desc:'No skills needed — just vibes, food, and friendly competition. Bay time and food credit included.',tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00'},
+  {id:'S13',emoji:'🌿',bg:'#0a1a0a',name:'Zipline Adventure — Sandy River',date:'Sat, May 10',price:65,spots:30,desc:"Largest aerial adventure park in Central Virginia. 60+ obstacles, 20 ziplines, 4 difficulty levels. 3-hour experience.",tag:'⭐ Alan Present',tagBg:'#fff3ec',tagFg:'#EF6C00',dark:true},
+];
+
+const ALL = [...FALL,...SPRING];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let cart = {};
+let sem = 'fall';
+
+// ─── RENDER ACTIVITIES ────────────────────────────────────────────────────────
+function renderActs() {
+  const con = document.getElementById('act-container');
+  let html = '';
+  const showFall = sem === 'fall' || sem === 'both';
+  const showSpring = sem === 'spring' || sem === 'both';
+
+  if (showFall) {
+    html += `<div class="sem-label">🍂 Fall 2026</div><div class="act-grid">`;
+    FALL.forEach(a => { html += cardHTML(a); });
+    html += `</div>`;
+  }
+  if (showSpring) {
+    html += `<div class="sem-label">🌸 Spring 2027</div><div class="act-grid">`;
+    SPRING.forEach(a => { html += cardHTML(a); });
+    html += `</div>`;
+  }
+  con.innerHTML = html;
+  updateCart();
+}
+
+function cardHTML(a) {
+  const sel = !!cart[a.id];
+  const isFree = a.price === 0;
+  const dark = !!a.dark;
+  const priceColor = dark ? '#fff' : '#111';
+  const spotColor = dark ? '#aaa' : '#888';
+  return `
+  <div class="ac${sel?' on':''}" id="card-${a.id}" onclick="toggle('${a.id}')">
+    <div class="ac-top" style="background:${a.bg}">
+      <span class="ac-emoji">${a.emoji}</span>
+      <div class="ac-price-wrap">
+        <div class="ac-price" style="color:${priceColor}">${isFree?'Free':'$'+a.price}</div>
+        ${a.spots<999?`<div class="ac-spots" style="color:${spotColor}">${a.spots} spots</div>`:''}
+      </div>
+      ${sel?`<div class="ac-check">✓</div>`:''}
+      <div class="ac-tag" style="background:${a.tagBg};color:${a.tagFg}">${a.tag}</div>
+    </div>
+    <div class="ac-body">
+      <div class="ac-name">${a.name}</div>
+      <div class="ac-date">${a.date}</div>
+      <div class="ac-desc">${a.desc}</div>
+      <div class="ac-btn">${sel?'✓ Added — tap to remove':isFree?'Sign up (Free)':'Sign up — $'+a.price}</div>
+    </div>
+  </div>`;
+}
+
+function toggle(id) {
+  cart[id] = !cart[id];
+  const a = ALL.find(x=>x.id===id);
+  const card = document.getElementById('card-'+id);
+  const sel = cart[id];
+  card.classList.toggle('on', sel);
+  card.querySelector('.ac-top').innerHTML = `
+    <span class="ac-emoji">${a.emoji}</span>
+    <div class="ac-price-wrap">
+      <div class="ac-price" style="color:${a.dark?'#fff':'#111'}">${a.price===0?'Free':'$'+a.price}</div>
+      ${a.spots<999?`<div class="ac-spots" style="color:${a.dark?'#aaa':'#888'}">${a.spots} spots</div>`:''}
+    </div>
+    ${sel?`<div class="ac-check">✓</div>`:''}
+    <div class="ac-tag" style="background:${a.tagBg};color:${a.tagFg}">${a.tag}</div>`;
+  card.querySelector('.ac-btn').textContent = sel?'✓ Added — tap to remove':a.price===0?'Sign up (Free)':'Sign up — $'+a.price;
+  card.querySelector('.ac-btn').style.background = sel?'#111':'#EF6C00';
+  updateCart();
+}
+
+function updateCart() {
+  const sel = ALL.filter(a=>cart[a.id]);
+  const total = sel.reduce((s,a)=>s+a.price,0);
+  const count = sel.length;
+  const bar = document.getElementById('cart');
+  const badge = document.getElementById('count-badge');
+  badge.textContent = count+' selected';
+
+  if (count === 0) {
+    bar.innerHTML = `<div class="cart-empty">Select activities above to see your total</div>`;
+  } else {
+    bar.innerHTML = `
+      <div class="cart-live">
+        <div class="cart-left">
+          <div class="cart-count">${count} activit${count===1?'y':'ies'} selected</div>
+          <div class="cart-names">${sel.map(a=>a.name).join(' · ')}</div>
+        </div>
+        <div class="cart-right">
+          <div class="cart-lbl">Total</div>
+          <div class="cart-total">$${total}</div>
+        </div>
+      </div>`;
+  }
+}
+
+function setSem(s, btn) {
+  sem = s;
+  document.getElementById('sem-hidden').value = s;
+  document.querySelectorAll('.sem-tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  renderActs();
+}
+
+// ─── SIGNATURE PAD ────────────────────────────────────────────────────────────
+const canvas = document.getElementById('sig');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let hasSig = false;
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / r.width;
+  const scaleY = canvas.height / r.height;
+  if (e.touches) {
+    return {x:(e.touches[0].clientX-r.left)*scaleX, y:(e.touches[0].clientY-r.top)*scaleY};
+  }
+  return {x:(e.clientX-r.left)*scaleX, y:(e.clientY-r.top)*scaleY};
+}
+
+canvas.addEventListener('mousedown', e=>{drawing=true;ctx.beginPath();const p=getPos(e);ctx.moveTo(p.x,p.y)});
+canvas.addEventListener('mousemove', e=>{if(!drawing)return;const p=getPos(e);ctx.lineWidth=2;ctx.lineCap='round';ctx.strokeStyle='#111';ctx.lineTo(p.x,p.y);ctx.stroke();hasSig=true});
+canvas.addEventListener('mouseup',()=>drawing=false);
+canvas.addEventListener('mouseleave',()=>drawing=false);
+canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;ctx.beginPath();const p=getPos(e);ctx.moveTo(p.x,p.y)},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineWidth=2;ctx.lineCap='round';ctx.strokeStyle='#111';ctx.lineTo(p.x,p.y);ctx.stroke();hasSig=true},{passive:false});
+canvas.addEventListener('touchend',()=>drawing=false);
+
+function clearSig(){ctx.clearRect(0,0,canvas.width,canvas.height);hasSig=false;}
+
+// ─── FORM SUBMISSION ──────────────────────────────────────────────────────────
+document.getElementById('mainform').addEventListener('submit', function(e) {
+  e.preventDefault();
+  let valid = true;
+
+  // Validate required fields
+  ['fname','lname','grade','company','cemail','pemail','phone'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('err');valid=false;}
+    else el.classList.remove('err');
+  });
+
+  // Validate signature
+  if(!hasSig){
+    document.getElementById('sig-err').style.display='block';
+    valid=false;
+  } else {
+    document.getElementById('sig-err').style.display='none';
+  }
+
+  // Validate agreement
+  if(!document.getElementById('agree').checked) valid=false;
+
+  // Validate activities
+  const sel = ALL.filter(a=>cart[a.id]);
+  if(sel.length===0){
+    document.getElementById('act-err').classList.add('show');
+    valid=false;
+  } else {
+    document.getElementById('act-err').classList.remove('show');
+  }
+
+  if(!valid){
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+
+  // Format activity selections for JotForm
+  const total = sel.reduce((s,a)=>s+a.price,0);
+  const fallSel = sel.filter(a=>a.id.startsWith('F'));
+  const springSel = sel.filter(a=>a.id.startsWith('S'));
+
+  function fmtActivities(list) {
+    if (!list.length) return 'None selected';
+    let lines = list.map(a=>`${a.emoji} ${a.name} | ${a.date} | ${a.price===0?'Free':'$'+a.price}`);
+    lines.push('');
+    lines.push('SUBTOTAL: $' + list.reduce((s,a)=>s+a.price,0).toFixed(2));
+    return lines.join('\n');
+  }
+
+  document.getElementById('selected-activities-field').value = fmtActivities(fallSel);
+  document.getElementById('total-amount-field').value = springSel.length
+    ? fmtActivities(springSel) + '\n\nGRAND TOTAL: $' + total.toFixed(2)
+    : 'None selected\n\nGRAND TOTAL: $' + total.toFixed(2);
+
+  // Signature as base64 image
+  document.getElementById('sig-data-field').value = canvas.toDataURL('image/png', 0.6);
+
+  // Set submission timestamp
+  document.getElementById('jsExecutionTracker').value = 'build-date-' + Date.now();
+
+  // Show thank you page
+  document.getElementById('mainform').style.display='none';
+  document.getElementById('cart').style.display='none';
+  const ty = document.getElementById('ty');
+  ty.classList.add('show');
+  document.getElementById('ty-amt').textContent='$'+total;
+  let itemsHTML = sel.map(a=>`<div class="ty-item"><span>${a.emoji} ${a.name}</span><span>${a.price===0?'Free':'$'+a.price}</span></div>`).join('');
+  document.getElementById('ty-list').innerHTML=itemsHTML;
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Build JSON payload for Netlify function → JotForm API
+  const payload = {
+    firstName:        document.getElementById('fname').value,
+    lastName:         document.getElementById('lname').value,
+    grade:            document.getElementById('grade').value,
+    cadetEmail:       document.getElementById('cemail').value,
+    parentEmail:      document.getElementById('pemail').value,
+    phone:            document.getElementById('phone').value,
+    company:          document.getElementById('company').value,
+    agreement:        document.getElementById('agree').checked ? 'I agree to the trip rules and behaviors' : '',
+    semester:         document.querySelector('input[name="semester"]:checked')?.value || sem,
+    fallActivities:   document.getElementById('selected-activities-field').value,
+    springActivities: document.getElementById('total-amount-field').value,
+    signature:        document.getElementById('sig-data-field').value,
+  };
+
+  // Disable submit button during request
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  fetch('/.netlify/functions/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('mainform').style.display = 'none';
+      document.getElementById('cart').style.display = 'none';
+      document.getElementById('ty').classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Submit Sign-Up →';
+      alert('There was an issue submitting: ' + (data.error || 'Unknown error. Please try again.'));
+    }
+  })
+  .catch(err => {
+    btn.disabled = false;
+    btn.textContent = 'Submit Sign-Up →';
+    alert('Connection error. Please check your internet and try again.');
+    console.error(err);
+  });
+});
+
+// ─── INIT ──────────────────────────────────────────────────────────────────────
+renderActs();
+</script>
+</body>
+</html>
