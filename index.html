@@ -205,7 +205,7 @@ canvas{display:block;width:100%;height:110px;cursor:crosshair;touch-action:none;
   <!-- SEMESTER SELECTOR -->
   <div class="card">
     <div class="card-hdr"><h2>Section 3 — Semester Selection</h2></div>
-    <input type="hidden" name="semester" id="sem-hidden" value="fall"><div class="sem-tabs">
+    <div class="sem-tabs">
       <button type="button" class="sem-tab on" onclick="setSem('fall',this)">🍂 Fall 2026</button>
       <button type="button" class="sem-tab" onclick="setSem('spring',this)">🌸 Spring 2027</button>
       <button type="button" class="sem-tab" onclick="setSem('both',this)">📋 Both Semesters</button>
@@ -369,7 +369,6 @@ function updateCart() {
 
 function setSem(s, btn) {
   sem = s;
-  document.getElementById('sem-hidden').value = s;
   document.querySelectorAll('.sem-tab').forEach(t=>t.classList.remove('on'));
   btn.classList.add('on');
   renderActs();
@@ -459,9 +458,6 @@ document.getElementById('mainform').addEventListener('submit', function(e) {
   // Signature as base64 image
   document.getElementById('sig-data-field').value = canvas.toDataURL('image/png', 0.6);
 
-  // Set submission timestamp
-  document.getElementById('jsExecutionTracker').value = 'build-date-' + Date.now();
-
   // Show thank you page
   document.getElementById('mainform').style.display='none';
   document.getElementById('cart').style.display='none';
@@ -482,7 +478,7 @@ document.getElementById('mainform').addEventListener('submit', function(e) {
     phone:            document.getElementById('phone').value,
     company:          document.getElementById('company').value,
     agreement:        document.getElementById('agree').checked ? 'I agree to the trip rules and behaviors' : '',
-    semester:         document.querySelector('input[name="semester"]:checked')?.value || sem,
+    semester:         sem,
     fallActivities:   document.getElementById('selected-activities-field').value,
     springActivities: document.getElementById('total-amount-field').value,
     signature:        document.getElementById('sig-data-field').value,
